@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Management | Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ Top bar ============ -->
+<header class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+        <button class="icon-btn menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')"><i class="bi bi-list"></i></button>
+        <div class="logo"><div class="logo-mark">B</div> Bank Management</div>
+    </div>
+    <div class="right">
+        <span id="greeting"></span>
+        <button class="icon-btn" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Logout</button>
+    </div>
+</header>
+
+<div class="layout">
+    <!-- ============ Sidebar menu: data-section = id of the section to show ============ -->
+    <nav class="sidebar">
+        <div class="nav-item active" data-section="home"><i class="bi bi-house-door-fill"></i> Home</div>
+        <div class="nav-item" data-section="transfer"><i class="bi bi-send-fill"></i> Send Money</div>
+        <div class="nav-item" data-section="beneficiaries"><i class="bi bi-people-fill"></i> Beneficiaries</div>
+        <div class="nav-item" data-section="cash"><i class="bi bi-wallet2"></i> Deposit / Withdraw</div>
+        <div class="nav-item" data-section="bills"><i class="bi bi-receipt"></i> Bills &amp; Recharge</div>
+        <div class="nav-item" data-section="fd"><i class="bi bi-piggy-bank-fill"></i> Fixed Deposits</div>
+        <div class="nav-item" data-section="loans"><i class="bi bi-cash-coin"></i> Loans</div>
+        <div class="nav-item" data-section="cards"><i class="bi bi-credit-card-2-front-fill"></i> Cards</div>
+        <div class="nav-item" data-section="statement"><i class="bi bi-journal-text"></i> Statement</div>
+        <div class="nav-item" data-section="profile"><i class="bi bi-person-circle"></i> Profile &amp; Security</div>
+    </nav>
+
+    <main class="main">
+
+        <!-- ============ HOME ============ -->
+        <section id="home" class="section">
+            <div class="balance-card">
+                <div class="label" id="accType">SAVINGS ACCOUNT</div>
+                <div class="amount">
+                    <span id="balance">₹ ••••••</span>
+                    <button id="toggleBalance" title="Show / hide balance"><i class="bi bi-eye"></i></button>
+                </div>
+                <div class="meta">
+                    <div>Account No.<b id="accNumber"></b></div>
+                    <div>UPI ID<b id="upiId"></b></div>
+                    <div>IFSC<b id="ifsc"></b></div>
+                    <div>Status<b id="accStatus"></b></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Quick Actions</h3>
+                <div class="tiles">
+                    <div class="tile" data-go="transfer"><i class="bi bi-send-fill"></i><span>Send Money</span></div>
+                    <div class="tile" data-go="cash"><i class="bi bi-plus-circle-fill"></i><span>Add Money</span></div>
+                    <div class="tile" data-go="bills"><i class="bi bi-lightning-charge-fill"></i><span>Pay Bills</span></div>
+                    <div class="tile" data-go="bills" data-bill="MOBILE"><i class="bi bi-phone-fill"></i><span>Recharge</span></div>
+                    <div class="tile" data-go="fd"><i class="bi bi-piggy-bank-fill"></i><span>Open FD</span></div>
+                    <div class="tile" data-go="loans"><i class="bi bi-cash-coin"></i><span>Loans</span></div>
+                    <div class="tile" data-go="cards"><i class="bi bi-credit-card-fill"></i><span>Cards</span></div>
+                    <div class="tile" data-go="statement"><i class="bi bi-journal-text"></i><span>Statement</span></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <h3>Recent Transactions</h3>
+                    <a href="#" data-go="statement">View all</a>
+                </div>
+                <div id="recentList"></div>
+            </div>
+        </section>
+
+        <!-- ============ SEND MONEY ============ -->
+        <section id="transfer" class="section hidden">
+            <h2>Send Money</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <form id="transferForm">
+                        <label>Account number or UPI ID</label>
+                        <div class="row" style="flex-direction:row">
+                            <input id="tTo" placeholder="e.g. 31234567890 or 9876543211@bank" required>
+                            <button type="button" class="btn btn-outline" id="verifyPayee" style="flex:0 0 auto">Verify</button>
+                        </div>
+                        <div id="payeeName" class="payee-box hidden"></div>
+                        <label>Amount (₹)</label>
+                        <input id="tAmount" type="number" min="1" step="0.01" required>
+                        <label>Remarks (optional)</label>
+                        <input id="tRemarks" maxlength="50" placeholder="e.g. Rent">
+                        <div class="form-actions"><button class="btn btn-block" type="submit">Proceed to Pay</button></div>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Pay a saved beneficiary</h3>
+                    <div id="benChips" class="chips"></div>
+                    <p class="muted" style="margin-top:16px;font-size:12px">
+                        Limits: ₹2,00,000 per transaction, ₹5,00,000 per day. Every transfer needs your 4-digit MPIN.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ BENEFICIARIES ============ -->
+        <section id="beneficiaries" class="section hidden">
+            <h2>Beneficiaries</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Add beneficiary</h3>
+                    <form id="benForm">
+                        <label>Name</label><input name="name" required>
+                        <label>Account number</label><input name="accountNumber" required>
+                        <div class="row">
+                            <div><label>IFSC</label><input name="ifsc" value="SMBK0001234" required></div>
+                            <div><label>Nickname</label><input name="nickname"></div>
+                        </div>
+                        <div class="form-actions"><button class="btn btn-block">Add Beneficiary</button></div>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Saved beneficiaries</h3>
+                    <div id="benList"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ DEPOSIT / WITHDRAW ============ -->
+        <section id="cash" class="section hidden">
+            <h2>Deposit / Withdraw</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3><i class="bi bi-plus-circle-fill" style="color:var(--green)"></i> Deposit money</h3>
+                    <form id="depositForm">
+                        <label>Amount (₹)</label><input type="number" min="1" step="0.01" required>
+                        <div class="form-actions"><button class="btn btn-green btn-block">Deposit</button></div>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3><i class="bi bi-dash-circle-fill" style="color:var(--red)"></i> Withdraw money</h3>
+                    <form id="withdrawForm">
+                        <label>Amount (₹)</label><input type="number" min="1" step="0.01" required>
+                        <div class="form-actions"><button class="btn btn-red btn-block">Withdraw</button></div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ BILLS & RECHARGE ============ -->
+        <section id="bills" class="section hidden">
+            <h2>Bills &amp; Recharge</h2>
+            <div class="card">
+                <div class="tiles" id="billTypes">
+                    <div class="tile selected" data-type="ELECTRICITY"><i class="bi bi-lightning-charge-fill"></i><span>Electricity</span></div>
+                    <div class="tile" data-type="MOBILE"><i class="bi bi-phone-fill"></i><span>Mobile</span></div>
+                    <div class="tile" data-type="DTH"><i class="bi bi-tv-fill"></i><span>DTH</span></div>
+                    <div class="tile" data-type="WATER"><i class="bi bi-droplet-fill"></i><span>Water</span></div>
+                    <div class="tile" data-type="GAS"><i class="bi bi-fire"></i><span>Gas</span></div>
+                </div>
+            </div>
+            <div class="card" style="max-width:520px">
+                <form id="billForm">
+                    <label>Operator / Biller</label><select id="bOperator"></select>
+                    <label id="bNumberLabel">Consumer number</label><input id="bNumber" required>
+                    <label>Amount (₹)</label><input id="bAmount" type="number" min="1" step="0.01" required>
+                    <div class="form-actions"><button class="btn btn-block">Pay Now</button></div>
+                </form>
+            </div>
+        </section>
+
+        <!-- ============ FIXED DEPOSITS ============ -->
+        <section id="fd" class="section hidden">
+            <h2>Fixed Deposits</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Open a new FD</h3>
+                    <form id="fdForm">
+                        <label>Amount (min ₹1,000)</label><input id="fdAmount" type="number" min="1000" value="10000" required>
+                        <label>Tenure</label>
+                        <select id="fdMonths">
+                            <option value="6">6 months</option><option value="12" selected>1 year</option>
+                            <option value="24">2 years</option><option value="36">3 years</option>
+                            <option value="60">5 years</option><option value="120">10 years</option>
+                        </select>
+                        <div class="receipt-rows" id="fdPreview"></div>
+                        <button class="btn btn-block">Open FD</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Interest rates</h3>
+                    <table>
+                        <tr><th>Tenure</th><th>Rate (p.a.)</th></tr>
+                        <tr><td>Less than 1 year</td><td>6.00%</td></tr>
+                        <tr><td>1 - 2 years</td><td>6.80%</td></tr>
+                        <tr><td>2 - 5 years</td><td>7.00%</td></tr>
+                        <tr><td>5 years and above</td><td>6.50%</td></tr>
+                    </table>
+                    <p class="muted" style="margin-top:12px;font-size:12px">Interest compounded quarterly. Premature closure: 1% penalty on rate.</p>
+                </div>
+            </div>
+            <div class="card">
+                <h3>My Fixed Deposits</h3>
+                <div class="table-wrap" id="fdList"></div>
+            </div>
+        </section>
+
+        <!-- ============ LOANS ============ -->
+        <section id="loans" class="section hidden">
+            <h2>Loans</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>EMI calculator &amp; apply</h3>
+                    <form id="loanForm">
+                        <label>Loan type</label>
+                        <select id="lType">
+                            <option value="PERSONAL">Personal Loan (11.50%)</option>
+                            <option value="HOME">Home Loan (8.50%)</option>
+                            <option value="CAR">Car Loan (9.20%)</option>
+                            <option value="EDUCATION">Education Loan (8.15%)</option>
+                        </select>
+                        <div class="row">
+                            <div><label>Amount (₹)</label><input id="lAmount" type="number" min="1000" value="200000" required></div>
+                            <div><label>Tenure (months)</label><input id="lMonths" type="number" min="6" max="360" value="24" required></div>
+                        </div>
+                        <div class="receipt-rows" id="emiResult"></div>
+                        <button class="btn btn-block">Apply for Loan</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>How it works</h3>
+                    <ol style="padding-left:18px;line-height:2">
+                        <li>Calculate your EMI and apply.</li>
+                        <li>The bank admin reviews and approves.</li>
+                        <li>Loan amount is credited to your account.</li>
+                        <li>Pay EMIs from here until the loan is closed.</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="card">
+                <h3>My Loans</h3>
+                <div class="table-wrap" id="loanList"></div>
+            </div>
+        </section>
+
+        <!-- ============ CARDS ============ -->
+        <section id="cards" class="section hidden">
+            <h2>Debit Card</h2>
+            <div class="card" style="display:flex;gap:32px;flex-wrap:wrap;align-items:center">
+                <div class="debit-card" id="debitCard">
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <div class="logo" style="font-size:16px"><div class="logo-mark" style="width:28px;height:28px">B</div> Bank Management</div>
+                        <span style="font-size:12px;font-weight:700">DEBIT</span>
+                    </div>
+                    <div class="chip-img"></div>
+                    <div class="number" id="cardNumber"></div>
+                    <div class="bottom"><span id="cardName"></span><span>VALID THRU 12/30</span></div>
+                </div>
+                <div>
+                    <p>Card status: <span id="cardStatus"></span></p>
+                    <p class="muted" style="margin:8px 0 16px">Lost your card? Block it instantly. You can unblock it any time.</p>
+                    <button class="btn" id="cardToggle"></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ STATEMENT ============ -->
+        <section id="statement" class="section hidden">
+            <h2>Account Statement</h2>
+            <div class="card no-print">
+                <div class="row" style="align-items:flex-end">
+                    <div><label>From</label><input type="date" id="sFrom"></div>
+                    <div><label>To</label><input type="date" id="sTo"></div>
+                    <div style="display:flex;gap:8px">
+                        <button class="btn" id="sSearch">Search</button>
+                        <button class="btn btn-outline" id="sCsv">CSV</button>
+                        <button class="btn btn-outline" onclick="window.print()">Print</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="table-wrap" id="statementTable"></div>
+            </div>
+        </section>
+
+        <!-- ============ PROFILE ============ -->
+        <section id="profile" class="section hidden">
+            <h2>Profile &amp; Security</h2>
+            <div class="card" id="profileDetails"></div>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Change password</h3>
+                    <form id="pwdForm">
+                        <label>Current password</label><input name="oldPassword" type="password" required>
+                        <label>New password</label><input name="newPassword" type="password" minlength="6" required>
+                        <div class="form-actions"><button class="btn btn-block">Update Password</button></div>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Change MPIN</h3>
+                    <form id="mpinForm">
+                        <label>Login password</label><input name="password" type="password" required>
+                        <label>New 4-digit MPIN</label><input name="newMpin" type="password" maxlength="4" pattern="\d{4}" required>
+                        <div class="form-actions"><button class="btn btn-block">Update MPIN</button></div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- ============ MPIN popup ============ -->
+<div class="modal-bg hidden" id="mpinModal">
+    <div class="modal">
+        <h3>Enter MPIN</h3>
+        <p class="muted" id="mpinText"></p>
+        <input class="pin-input" id="mpinInput" type="password" maxlength="4" inputmode="numeric" autocomplete="off">
+        <div class="form-actions">
+            <button class="btn btn-outline btn-block" id="mpinCancel">Cancel</button>
+            <button class="btn btn-block" id="mpinOk">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============ Success receipt popup ============ -->
+<div class="modal-bg hidden" id="receiptModal">
+    <div class="modal">
+        <div class="success-icon"><i class="bi bi-check-lg"></i></div>
+        <h3 id="rMessage"></h3>
+        <div class="receipt-amount" id="rAmount"></div>
+        <div class="receipt-rows">
+            <div><span class="muted">Reference no.</span><b id="rRef"></b></div>
+            <div><span class="muted">Date &amp; time</span><b id="rDate"></b></div>
+            <div><span class="muted">Available balance</span><b id="rBalance"></b></div>
+        </div>
+        <button class="btn btn-block" onclick="document.getElementById('receiptModal').classList.add('hidden')">Done</button>
+    </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

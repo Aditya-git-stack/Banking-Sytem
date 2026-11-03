@@ -1,0 +1,219 @@
+/* ===== Bank Management - stylesheet =====
+   Flat, simple netbanking look: navy header, white panels, thin borders. */
+:root {
+    --navy: #14396a;
+    --navy-dark: #0d2a50;
+    --blue: #1f6fb2;
+    --bg: #eef1f5;
+    --panel: #ffffff;
+    --border: #d6dce4;
+    --text: #222b36;
+    --muted: #64707d;
+    --green: #1e7e34;
+    --red: #c62828;
+    --amber: #b26a00;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.45; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h2 { font-size: 18px; font-weight: 600; margin-bottom: 14px; color: var(--navy); }
+h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--navy); text-transform: uppercase; letter-spacing: .3px; }
+code { background: #f1f3f6; padding: 1px 4px; border-radius: 2px; }
+.muted { color: var(--muted); }
+.hidden { display: none !important; }
+.credit { color: var(--green); font-weight: 600; }
+.debit { color: var(--red); font-weight: 600; }
+
+/* ---------- Buttons & forms ---------- */
+.btn {
+    border: 1px solid var(--navy); border-radius: 3px; padding: 8px 16px; font-size: 14px; font-weight: 600;
+    cursor: pointer; background: var(--navy); color: #fff; font-family: inherit;
+}
+.btn:hover { background: var(--navy-dark); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.btn-outline { background: #fff; color: var(--navy); }
+.btn-outline:hover { background: #f1f4f8; }
+.btn-accent { background: var(--blue); border-color: var(--blue); }
+.btn-red { background: var(--red); border-color: var(--red); }
+.btn-red:hover { background: #a31f1f; }
+.btn-green { background: var(--green); border-color: var(--green); }
+.btn-green:hover { background: #17652a; }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+.btn-block { width: 100%; }
+
+label { display: block; font-size: 13px; font-weight: 600; color: #3b4652; margin: 12px 0 4px; }
+input, select {
+    width: 100%; padding: 8px 10px; border: 1px solid #b9c2cd; border-radius: 3px; font-size: 14px;
+    font-family: inherit; background: #fff; outline: none;
+}
+input:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(31, 111, 178, .15); }
+.row { display: flex; gap: 12px; }
+.row > * { flex: 1; }
+.form-actions { margin-top: 16px; display: flex; gap: 10px; }
+
+/* ---------- Auth pages (login / register) ---------- */
+.auth-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 16px; }
+.auth-page::before {
+    content: ""; position: fixed; top: 0; left: 0; right: 0; height: 6px; background: var(--navy);
+}
+.auth-wrap { display: flex; max-width: 900px; width: 100%; background: #fff; border: 1px solid var(--border); }
+.auth-form { flex: 1.1; padding: 28px 32px; }
+.auth-form h2 { margin-bottom: 2px; }
+.auth-hero { flex: 1; padding: 28px 32px; background: #f7f9fb; border-left: 1px solid var(--border); }
+.auth-hero .logo { color: var(--navy); margin-bottom: 20px; }
+.auth-hero h1 { font-size: 15px; color: var(--navy); margin: 0 0 8px; text-transform: uppercase; letter-spacing: .3px; }
+.auth-hero p { color: var(--muted); }
+.auth-hero ul { margin: 10px 0 0 18px; }
+.auth-hero li { margin: 6px 0; color: #3b4652; }
+.auth-hero li i { display: none; }
+.auth-hero small { display: block; margin-top: 24px; color: var(--muted); }
+.demo-box { margin-top: 20px; border: 1px dashed #b9c2cd; background: #fbfcfd; padding: 10px 12px; font-size: 13px; line-height: 1.8; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; }
+.logo-mark {
+    width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 16px;
+    background: #fff; color: var(--navy); border: 3px solid #f2b705; font-weight: 800;
+}
+.auth-hero .logo-mark { background: var(--navy); color: #fff; }
+
+/* ---------- App layout (dashboard / admin) ---------- */
+.topbar {
+    position: sticky; top: 0; z-index: 10; height: 56px; padding: 0 20px; color: #fff;
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--navy); border-bottom: 3px solid #f2b705;
+}
+.topbar .right { display: flex; align-items: center; gap: 14px; font-size: 13px; }
+.topbar .icon-btn { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.5); border-radius: 3px; padding: 5px 10px; cursor: pointer; font-size: 13px; }
+.topbar .icon-btn:hover { background: rgba(255,255,255,.1); }
+.menu-toggle { display: none; }
+
+.layout { display: flex; }
+.sidebar {
+    width: 220px; min-height: calc(100vh - 56px); background: #fff; border-right: 1px solid var(--border);
+    position: sticky; top: 56px; align-self: flex-start;
+}
+.nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid #edf0f3;
+    border-left: 3px solid transparent; color: var(--text); cursor: pointer;
+}
+.nav-item i { font-size: 15px; color: var(--muted); }
+.nav-item:hover { background: #f4f6f9; }
+.nav-item.active { border-left-color: var(--navy); background: #e8eef6; color: var(--navy); font-weight: 600; }
+.nav-item.active i { color: var(--navy); }
+.main { flex: 1; padding: 20px 24px; max-width: 1100px; }
+
+.card { background: var(--panel); border: 1px solid var(--border); padding: 16px 18px; margin-bottom: 16px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+/* ---------- Account summary ---------- */
+.balance-card {
+    background: #fff; border: 1px solid var(--border); border-top: 4px solid var(--navy);
+    padding: 16px 18px; margin-bottom: 16px;
+}
+.balance-card .label { color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: .4px; }
+.balance-card .amount { font-size: 26px; font-weight: 700; color: var(--navy); margin: 4px 0 14px; display: flex; align-items: center; gap: 10px; }
+.balance-card .amount button { background: #fff; border: 1px solid var(--border); color: var(--navy); border-radius: 3px; padding: 2px 8px; cursor: pointer; font-size: 14px; }
+.balance-card .meta { display: flex; gap: 0; flex-wrap: wrap; font-size: 12px; color: var(--muted); border-top: 1px solid #edf0f3; padding-top: 12px; }
+.balance-card .meta > div { padding-right: 28px; margin-right: 28px; border-right: 1px solid #edf0f3; }
+.balance-card .meta > div:last-child { border-right: none; }
+.balance-card .meta b { display: block; font-size: 14px; color: var(--text); margin-top: 2px; }
+.badge { display: inline-block; padding: 1px 8px; border-radius: 2px; font-size: 11px; font-weight: 600; border: 1px solid; }
+.badge-green { background: #eaf6ec; color: var(--green); }
+.badge-red { background: #fdecec; color: var(--red); }
+.badge-yellow { background: #fff6e5; color: var(--amber); }
+.badge-grey { background: #f2f2f2; color: #666; }
+
+/* ---------- Quick links ---------- */
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); border-top: 1px solid var(--border); border-left: 1px solid var(--border); }
+.tile {
+    background: #fff; padding: 14px 8px; text-align: center; cursor: pointer;
+    border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+}
+.tile:hover { background: #f4f7fb; }
+.tile i { font-size: 22px; color: var(--navy); display: block; margin-bottom: 6px; }
+.tile span { display: block; font-size: 13px; }
+.tile.selected { background: #e8eef6; box-shadow: inset 0 -3px 0 var(--navy); }
+
+/* ---------- Lists & tables ---------- */
+.txn { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #edf0f3; }
+.txn:last-child { border-bottom: none; }
+.txn .ico { width: 32px; height: 32px; display: grid; place-items: center; font-size: 15px; border: 1px solid var(--border); border-radius: 50%; }
+.txn .ico.credit { color: var(--green); }
+.txn .ico.debit { color: var(--red); }
+.txn .info { flex: 1; }
+.txn .info small { color: var(--muted); font-size: 12px; }
+.txn .amt { text-align: right; }
+.txn .amt small { display: block; color: var(--muted); font-weight: 400; font-size: 11px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; background: #f1f4f8; color: #3b4652; font-weight: 600; padding: 8px; border: 1px solid var(--border); }
+td { padding: 8px; border: 1px solid #e3e8ee; vertical-align: middle; }
+tbody tr:nth-child(even) td { background: #fafbfc; }
+.table-wrap { overflow-x: auto; }
+.empty { text-align: center; color: var(--muted); padding: 20px; }
+
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.chip { border: 1px solid #b9c2cd; color: var(--navy); background: #fff; border-radius: 3px; padding: 4px 10px; font-size: 12px; cursor: pointer; }
+.chip:hover { background: #e8eef6; }
+.payee-box { margin-top: 8px; padding: 8px 10px; border: 1px solid #b7dfc0; background: #eaf6ec; color: var(--green); font-weight: 600; }
+
+/* ---------- Debit card ---------- */
+.debit-card {
+    width: 340px; max-width: 100%; height: 200px; border-radius: 12px; padding: 20px; color: #fff;
+    background: var(--navy-dark); display: flex; flex-direction: column; justify-content: space-between;
+}
+.debit-card .logo { color: #fff; }
+.debit-card.blocked { background: #6b7480; }
+.debit-card .chip-img { width: 42px; height: 30px; border-radius: 5px; background: #d4b25a; }
+.debit-card .number { font-size: 19px; letter-spacing: 3px; font-family: Consolas, monospace; }
+.debit-card .bottom { display: flex; justify-content: space-between; font-size: 12px; text-transform: uppercase; }
+
+/* ---------- Modal ---------- */
+.modal-bg { position: fixed; inset: 0; background: rgba(0, 0, 0, .45); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
+.modal { background: #fff; border: 1px solid var(--border); border-top: 4px solid var(--navy); padding: 22px; width: 380px; max-width: 100%; text-align: center; }
+.modal h3 { font-size: 15px; text-transform: none; letter-spacing: 0; }
+.pin-input { text-align: center; font-size: 24px; letter-spacing: 14px; margin-top: 12px; }
+.success-icon { width: 56px; height: 56px; border-radius: 50%; border: 3px solid var(--green); color: var(--green); display: inline-grid; place-items: center; font-size: 28px; margin-bottom: 8px; }
+.receipt-amount { font-size: 26px; font-weight: 700; margin: 6px 0; color: var(--navy); }
+.receipt-rows { text-align: left; border: 1px solid var(--border); padding: 8px 12px; margin: 14px 0; font-size: 13px; }
+.receipt-rows div { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #e3e8ee; }
+.receipt-rows div:last-child { border-bottom: none; }
+
+/* ---------- Toast message ---------- */
+#toast {
+    position: fixed; top: 70px; right: 20px; z-index: 200; max-width: 360px;
+    background: #fff; color: var(--text); padding: 10px 14px; border: 1px solid var(--border); border-left: 4px solid var(--navy);
+    box-shadow: 0 2px 8px rgba(0,0,0,.12); opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+#toast.show { opacity: 1; }
+#toast.error { border-left-color: var(--red); color: var(--red); }
+#toast.success { border-left-color: var(--green); color: var(--green); }
+
+/* ---------- Admin ---------- */
+.stat { padding: 14px 16px; background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--navy); }
+.stat .num { font-size: 22px; font-weight: 700; color: var(--navy); margin-top: 4px; }
+.tabs { display: flex; margin-bottom: -1px; flex-wrap: wrap; }
+.tab { padding: 8px 16px; background: #f1f4f8; cursor: pointer; border: 1px solid var(--border); margin-right: -1px; color: #3b4652; }
+.tab.active { background: #fff; border-bottom-color: #fff; border-top: 3px solid var(--navy); color: var(--navy); font-weight: 600; }
+
+/* ---------- Print: only the statement ---------- */
+@media print {
+    .topbar, .sidebar, .no-print { display: none !important; }
+    .main { padding: 0; }
+    .card { border: none; }
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 860px) {
+    .auth-wrap { flex-direction: column; }
+    .auth-hero { border-left: none; border-top: 1px solid var(--border); }
+    .menu-toggle { display: inline-block; }
+    .sidebar { position: fixed; left: -240px; top: 56px; z-index: 20; transition: left .2s; }
+    .sidebar.open { left: 0; box-shadow: 2px 0 8px rgba(0,0,0,.15); }
+    .grid-2, .grid-4 { grid-template-columns: 1fr; }
+    .main { padding: 14px; }
+    .row { flex-direction: column; gap: 0; }
+    .balance-card .meta > div { border-right: none; margin-right: 0; padding: 4px 16px 4px 0; }
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Management | Open Account</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="auth-page">
+    <div class="auth-wrap">
+        <div class="auth-form">
+            <h2>Open an account</h2>
+            <p class="muted">Fill in your details</p>
+            <form id="registerForm">
+                <label>Full name</label>
+                <input name="fullName" placeholder="As per Aadhaar" required>
+                <div class="row">
+                    <div><label>Email</label><input name="email" type="email" required></div>
+                    <div><label>Mobile</label><input name="mobile" maxlength="10" pattern="\d{10}" placeholder="10 digits" required></div>
+                </div>
+                <div class="row">
+                    <div><label>Username</label><input name="username" minlength="4" required></div>
+                    <div><label>Account type</label>
+                        <select name="accountType"><option>SAVINGS</option><option>CURRENT</option></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div><label>Password</label><input name="password" type="password" minlength="6" required></div>
+                    <div><label>4-digit MPIN</label><input name="mpin" type="password" maxlength="4" pattern="\d{4}" required></div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-block" type="submit">Open Account</button>
+                </div>
+            </form>
+            <p style="margin-top:16px">Already have an account? <a href="index.html">Login</a></p>
+        </div>
+        <div class="auth-hero">
+            <div class="logo"><div class="logo-mark">B</div> Bank Management</div>
+            <h1>What you get</h1>
+            <ul>
+                <li>An 11-digit account number and UPI ID</li>
+                <li>A debit card you can block / unblock online</li>
+                <li>Zero balance savings account</li>
+                <li>Password and MPIN stored as BCrypt hashes</li>
+            </ul>
+            <small>Demo project - Spring Boot + JDBC</small>
+        </div>
+    </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        // Turn all form inputs into an object: { fullName: "...", email: "...", ... }
+        const body = Object.fromEntries(new FormData(e.target).entries());
+        try {
+            const data = await api("POST", "/api/auth/register", body);
+            toast(data.message, "success");
+            setTimeout(() => (window.location.href = "index.html"), 1500);
+        } catch (err) {
+            toast(err.message, "error");
+        }
+    });
+</script>
+</body>
+</html>
