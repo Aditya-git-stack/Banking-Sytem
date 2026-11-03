@@ -1,225 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bank System</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; min-height: 100vh; font-family: Segoe UI, Roboto, Arial, sans-serif;
-      background: #f1f5f9; color: #0f172a; display: flex; justify-content: center; padding: 24px 16px;
-    }
-    .container { width: 100%; max-width: 520px; }
-    h1 { text-align: center; color: #1e3a8a; margin: 8px 0 24px; }
-    .card {
-      background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 16px;
-      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12);
-    }
-    label { display: block; font-size: 14px; margin: 12px 0 4px; color: #475569; }
-    input {
-      width: 100%; padding: 10px; font-size: 16px; border: 1px solid #cbd5e1; border-radius: 8px;
-    }
-    button {
-      padding: 10px 16px; font-size: 15px; border: 0; border-radius: 8px; cursor: pointer;
-      background: #1d4ed8; color: #fff;
-    }
-    button:hover { background: #1e40af; }
-    button.green { background: #15803d; }
-    button.green:hover { background: #166534; }
-    button.red { background: #b91c1c; }
-    button.red:hover { background: #991b1b; }
-    button.grey { background: #64748b; }
-    button.full { width: 100%; margin-top: 16px; }
-    .row { display: flex; gap: 8px; margin-top: 12px; }
-    .row input { flex: 1; }
-    .balance { font-size: 34px; font-weight: 600; color: #1e3a8a; margin: 4px 0 0; }
-    .muted { color: #64748b; font-size: 14px; }
-    .top { display: flex; justify-content: space-between; align-items: center; }
-    .message { margin-top: 12px; padding: 10px; border-radius: 8px; font-size: 14px; display: none; }
-    .message.ok { display: block; background: #dcfce7; color: #166534; }
-    .message.err { display: block; background: #fee2e2; color: #991b1b; }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    th, td { text-align: left; padding: 8px 4px; border-bottom: 1px solid #e2e8f0; }
-    td.deposit { color: #15803d; font-weight: 600; }
-    td.withdraw { color: #b91c1c; font-weight: 600; }
-    .hidden { display: none; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Management | Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Java Bank</h1>
+<div class="auth-page">
+    <div class="auth-wrap">
+        <div class="auth-form">
+            <h2>Login to Internet Banking</h2>
+            <p class="muted">Enter your username and password</p>
 
-    <!-- Login screen -->
-    <div id="loginView" class="card">
-      <h2 style="margin-top:0">Login</h2>
-      <label for="accNo">Account number</label>
-      <input id="accNo" type="number" placeholder="e.g. 1001">
-      <label for="pin">PIN</label>
-      <input id="pin" type="password" placeholder="e.g. 1234">
-      <button class="full" id="loginBtn">Login</button>
-      <div id="loginMsg" class="message"></div>
-      <p class="muted">Demo accounts: 1001 / 1234 and 1002 / 4321</p>
+            <form id="loginForm">
+                <label>Username</label>
+                <input id="username" placeholder="Enter username" required>
+                <label>Password</label>
+                <input id="password" type="password" placeholder="Enter password" required>
+                <div class="form-actions">
+                    <button class="btn btn-block" type="submit">Login</button>
+                </div>
+            </form>
+            <p style="margin-top:16px">New to Bank Management? <a href="register.html">Open an account</a></p>
+
+            <div class="demo-box">
+                <b>Demo logins</b><br>
+                Customer: <code>rahul</code> / <code>rahul123</code> (MPIN <code>1234</code>)<br>
+                Customer: <code>priya</code> / <code>priya123</code> (MPIN <code>1234</code>)<br>
+                Admin: <code>admin</code> / <code>admin123</code>
+            </div>
+        </div>
+        <div class="auth-hero">
+            <div class="logo"><div class="logo-mark">B</div> Bank Management</div>
+            <h1>Safe banking tips</h1>
+            <ul>
+                <li>Never share your password, MPIN or OTP with anyone.</li>
+                <li>Bank staff will never ask for your MPIN on call.</li>
+                <li>Always log out after using a shared computer.</li>
+                <li>Report a lost debit card by blocking it from the Cards page.</li>
+            </ul>
+            <small>Demo project - Spring Boot + JDBC</small>
+        </div>
     </div>
+</div>
 
-    <!-- Dashboard screen -->
-    <div id="dashView" class="hidden">
-      <div class="card">
-        <div class="top">
-          <div>
-            <div class="muted">Welcome,</div>
-            <strong id="holderName"></strong>
-            <span class="muted" id="accountLabel"></span>
-          </div>
-          <button class="grey" id="logoutBtn">Logout</button>
-        </div>
-        <div class="muted" style="margin-top:16px">Current balance</div>
-        <div class="balance" id="balance"></div>
-      </div>
-
-      <div class="card">
-        <h3 style="margin-top:0">Deposit / Withdraw</h3>
-        <div class="row">
-          <input id="amount" type="number" min="0" step="0.01" placeholder="Amount">
-        </div>
-        <div class="row">
-          <button class="green" id="depositBtn" style="flex:1">Deposit</button>
-          <button class="red" id="withdrawBtn" style="flex:1">Withdraw</button>
-        </div>
-        <div id="txMsg" class="message"></div>
-      </div>
-
-      <div class="card">
-        <h3 style="margin-top:0">Transaction history</h3>
-        <table>
-          <thead>
-            <tr><th>Date</th><th>Type</th><th>Amount</th><th>Balance</th></tr>
-          </thead>
-          <tbody id="historyBody"></tbody>
-        </table>
-        <p id="emptyMsg" class="muted hidden">No transactions yet.</p>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Keep the logged-in user in memory (a real app would use a token/session).
-    let currentAccount = null;
-    let currentPin = null;
-
-    const $ = (id) => document.getElementById(id);
-
-    function money(n) {
-      return Number(n).toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
-    }
-
-    function showMessage(el, text, ok) {
-      el.textContent = text;
-      el.className = 'message ' + (ok ? 'ok' : 'err');
-    }
-
-    // One helper for every API call: adds the PIN header and handles errors.
-    async function api(path, options = {}) {
-      const headers = { 'Content-Type': 'application/json' };
-      if (currentPin !== null) headers['X-PIN'] = currentPin;
-      const response = await fetch(path, { ...options, headers });
-      let data = null;
-      try { data = await response.json(); } catch (e) { /* no body */ }
-      if (!response.ok) {
-        throw new Error((data && data.error) || 'Something went wrong (' + response.status + ')');
-      }
-      return data;
-    }
-
-    async function login() {
-      const accNo = $('accNo').value.trim();
-      const pin = $('pin').value.trim();
-      if (!accNo || !pin) {
-        showMessage($('loginMsg'), 'Enter account number and PIN', false);
-        return;
-      }
-      try {
-        const account = await api('/api/login', {
-          method: 'POST',
-          body: JSON.stringify({ accountNumber: Number(accNo), pin: pin })
-        });
-        currentAccount = account;
-        currentPin = pin;
-        $('loginView').classList.add('hidden');
-        $('dashView').classList.remove('hidden');
-        $('loginMsg').className = 'message';
-        renderAccount();
-        await loadHistory();
-      } catch (e) {
-        showMessage($('loginMsg'), e.message, false);
-      }
-    }
-
-    function renderAccount() {
-      $('holderName').textContent = currentAccount.holderName;
-      $('accountLabel').textContent = '(Acc #' + currentAccount.accountNumber + ')';
-      $('balance').textContent = money(currentAccount.balance);
-    }
-
-    async function loadHistory() {
-      const list = await api('/api/accounts/' + currentAccount.accountNumber + '/history');
-      const body = $('historyBody');
-      body.innerHTML = '';
-      $('emptyMsg').classList.toggle('hidden', list.length > 0);
-      list.forEach((t) => {
-        const tr = document.createElement('tr');
-        const cells = [
-          new Date(t.createdAt).toLocaleString(),
-          t.type,
-          money(t.amount),
-          money(t.balanceAfter)
-        ];
-        cells.forEach((text, i) => {
-          const td = document.createElement('td');
-          td.textContent = text; // textContent avoids HTML injection
-          if (i === 1) td.className = t.type.toLowerCase();
-          tr.appendChild(td);
-        });
-        body.appendChild(tr);
-      });
-    }
-
-    async function transact(kind) {
-      const amount = parseFloat($('amount').value);
-      if (!(amount > 0)) {
-        showMessage($('txMsg'), 'Enter an amount greater than 0', false);
-        return;
-      }
-      try {
-        const account = await api('/api/accounts/' + currentAccount.accountNumber + '/' + kind, {
-          method: 'POST',
-          body: JSON.stringify({ amount: amount })
-        });
-        currentAccount = account;
-        renderAccount();
-        await loadHistory();
-        $('amount').value = '';
-        showMessage($('txMsg'), (kind === 'deposit' ? 'Deposit' : 'Withdrawal') + ' successful', true);
-      } catch (e) {
-        showMessage($('txMsg'), e.message, false);
-      }
-    }
-
-    function logout() {
-      currentAccount = null;
-      currentPin = null;
-      $('pin').value = '';
-      $('amount').value = '';
-      $('txMsg').className = 'message';
-      $('dashView').classList.add('hidden');
-      $('loginView').classList.remove('hidden');
-    }
-
-    $('loginBtn').addEventListener('click', login);
-    $('pin').addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
-    $('depositBtn').addEventListener('click', () => transact('deposit'));
-    $('withdrawBtn').addEventListener('click', () => transact('withdraw'));
-    $('logoutBtn').addEventListener('click', logout);
-  </script>
+<script src="js/api.js"></script>
+<script>
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+        e.preventDefault();   // stop the browser from reloading the page
+        try {
+            const data = await api("POST", "/api/auth/login", {
+                username: document.getElementById("username").value.trim(),
+                password: document.getElementById("password").value
+            });
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("role", data.role);
+            localStorage.setItem("fullName", data.fullName);
+            window.location.href = data.role === "ADMIN" ? "admin.html" : "dashboard.html";
+        } catch (err) {
+            toast(err.message, "error");
+        }
+    });
+</script>
 </body>
 </html>

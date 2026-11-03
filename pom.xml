@@ -7,36 +7,57 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
+        <version>3.2.5</version>
         <relativePath/>
     </parent>
 
-    <groupId>com.example</groupId>
-    <artifactId>bank-fullstack</artifactId>
+    <groupId>com.bank</groupId>
+    <artifactId>bank-management-system</artifactId>
     <version>1.0.0</version>
-    <name>bank-fullstack</name>
-    <description>Full stack banking app: Spring Boot + H2 + HTML/JS</description>
+    <name>Bank Management System</name>
+    <description>YONO-style full stack bank management system (Spring Boot + HTML/CSS/JS)</description>
 
     <properties>
         <java.version>17</java.version>
     </properties>
 
     <dependencies>
-        <!-- REST API (backend) -->
+        <!-- REST APIs + embedded Tomcat + serves the frontend from /static -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!-- Database access with JPA/Hibernate -->
+        <!-- Plain JDBC: gives us a ready-made DataSource (connection pool) and runs schema.sql -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
-        <!-- H2 file database (no installation needed) -->
+        <!-- @NotBlank, @Email, @Positive ... checks on request data -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <!-- Only the BCrypt password hasher (not full Spring Security) -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+        <!-- Embedded file database: no installation needed -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <!-- Optional: switch to MySQL by editing application.properties -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

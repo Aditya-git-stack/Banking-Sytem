@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Run Bank App",
+            "request": "launch",
+            "mainClass": "com.bank.BankApplication",
+            "projectName": "bank-management-system"
+        }
+    ]
+}
